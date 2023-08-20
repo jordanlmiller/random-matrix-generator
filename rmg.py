@@ -31,10 +31,14 @@ class Real(RMG):
         return a @ np.transpose(a)
     
     def orthogonal(self):
-        pass
+        a = self._n_variate()
+        return util.column_gram_schmidt(a)
 
     def special_orthogonal(self):
-        pass
+        ortho = self.orthogonal()
+        det = np.linalg.det(ortho)
+        special_ortho = ortho / (det ** (1/self._n))
+        return special_ortho
 
     def symmetric(self):
         a = self._n_variate()
@@ -55,29 +59,35 @@ class Complex(RMG):
         print("Random Matrix Generator for Complex-Valued {}-dimensional Square Matrices".format(self._dimension))
 
     def normal(self):
-        a = self._uniform()
-        return a @ util.adjoint(a)
+        c = self._n_variate() + 1.j*self._n_variate()
+        return c @ util.adjoint(c)
     
     def unitary(self):
-        pass
+        c = self._n_variate() + 1.j*self._n_variate()
+        return util.column_gram_schmidt(c)
 
     def special_unitary(self):
-        pass
+        u = self.unitary()
+        det = np.linalg.det(u)
+        angle = np.arctan2(det.real, det.imag)
+        root_angle = - angle / self._n
+        return u / (np.cos(root_angle) + 1.j*np.sin(root_angle))
 
     def hermitian(self):
-        pass
+        c = self._n_variate() + 1.j*self._n_variate()
+        return c + util.adjoint(c)
 
     def skew_hermitian(self):
-        pass
+        c = self._n_variate() + 1.j*self._n_variate()
+        return c - util.adjoint(c)
 
     def symmetric(self):
-        a = self._n_variate()
-        return a + np.transpose(a)
+        c = self._n_variate() + 1.j*self._n_variate()
+        return c + np.transpose(c)
 
     def skew_symmetric(self):
-        a = self._n_variate()
-        return a - np.transpose(a)
-
+        c = self._n_variate() + 1.j*self._n_variate()
+        return c - np.transpose(c)
 
     def permutation(self):
         return np.eye(self._n)[self._rng.permutation(self._n)]
