@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def array_equal(A, B, eps):
+def array_equal(A, B, eps=0.0001):
     '''determine if two arrays are equal up to a small value eps'''
     abs_diff = np.abs(A-B)
     return np.all(abs_diff < eps)
@@ -24,8 +24,7 @@ def pseudo_inverse(A):
 
 def adjoint(A):
     '''return the adjoint of the given matrix A'''
-    tr = np.transpose(A)
-    return np.conjugate(A)
+    return np.conjugate(np.transpose(A))
 
 
 def inner(u, v):
