@@ -33,10 +33,8 @@ class Testrmg(unittest.TestCase):
             self.assertTrue(np.sum(real_permutation[:,col]), 1)
             self.assertTrue(np.sum(complex_permutation[col,:]), 1)
 
-
     def test_Real_input(self):
         self.assertRaises(TypeError, Real, "string")
-
 
     def test_Real_normal(self):
         for _ in range(self.k):
@@ -44,12 +42,10 @@ class Testrmg(unittest.TestCase):
             a_star = adjoint(a)
             self.assertTrue(array_equal(a@a_star, a_star@a))
 
-
     def test_Real_orthogonal(self):
         for _ in range(self.k):
             a = self.real_rmg.orthogonal()
             self.assertTrue(array_equal(a@np.transpose(a), np.eye(self.n)))
-
 
     def test_Real_special_orthogonal(self):
         for _ in range(self.k):
@@ -58,30 +54,27 @@ class Testrmg(unittest.TestCase):
             determinant = np.linalg.det(a)
             self.assertAlmostEqual(determinant, 1.)
 
-
     def test_Real_symmetric(self):
         for _ in range(self.k):
             a = self.real_rmg.symmetric()
             self.assertTrue(array_equal(a, np.transpose(a)))
-
 
     def test_Real_skew_symmetric(self):
         for _ in range(self.k):
             a = self.real_rmg.skew_symmetric()
             self.assertTrue(array_equal(a, -np.transpose(a)))
 
-
     def test_Real_positive_definite(self):
-            for _ in range(self.k):
-                a = self.real_rmg.skew_symmetric()
-                self.assertTrue(array_equal(a, -np.transpose(a)))
-
+        for _ in range(self.k):
+            a = self.real_rmg.positive_definite()
+            eigvals, _ = np.linalg.eig(a)
+            num_positive = np.sum(np.sign(eigvals))
+            self.assertEqual(num_positive, self.n)
 
 
 
     def test_Complex_input(self):
         self.assertRaises(TypeError, Complex, "string") 
-
     
     def test_Complex_normal(self):
         for _ in range(self.k):
@@ -89,13 +82,11 @@ class Testrmg(unittest.TestCase):
             a_star = adjoint(a)
             self.assertTrue(array_equal(a@a_star, a_star@a))
     
-
     def test_Complex_unitary(self):
         for _ in range(self.k):
             a = self.complex_rmg.unitary()
             a_star = adjoint(a)
             self.assertTrue(array_equal(a@a_star, np.eye(self.n)))
-
 
     def test_Complex_special_unitary(self):
         for _ in range(self.k):
@@ -106,13 +97,11 @@ class Testrmg(unittest.TestCase):
             det_magnitude = np.sqrt(determinant.real**2 + determinant.imag**2)
             self.assertAlmostEqual(det_magnitude, 1)
 
-
     def test_Complex_hermitian(self):
         for _ in range(self.k):
             a = self.complex_rmg.hermitian()
             a_star = adjoint(a)
             self.assertTrue(array_equal(a, a_star))
-
 
     def test_Complex_skew_hermitian(self):
         for _ in range(self.k):
@@ -120,12 +109,10 @@ class Testrmg(unittest.TestCase):
             a_star = adjoint(a)
             self.assertTrue(array_equal(a, -a_star))
 
-
     def test_Complex_symmetric(self):
         for _ in range(self.k):
             a = self.complex_rmg.symmetric()
             self.assertTrue(array_equal(a, np.transpose(a)))
-
 
     def test_Complex_skew_symmetric(self):
         for _ in range(self.k):
